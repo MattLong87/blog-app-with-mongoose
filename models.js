@@ -18,6 +18,8 @@ postSchema.methods.formatPost = function(){
 		title: this.title,
 		content: this.content,
 		author: this.fullName,
+		//putting id here so we can have one to use for requests
+		id: this.id
 		//need to add created field somehow
 	}
 }

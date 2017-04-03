@@ -14,7 +14,7 @@ const {PORT, DATABASE_URL} = require('./config');
 //log the HTTP layer
 app.use(morgan('common'));
 
-app.use('/blog-posts', blogPostsRouter);
+app.use('/posts', blogPostsRouter);
 
 let server;
 
