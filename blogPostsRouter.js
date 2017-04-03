@@ -8,13 +8,16 @@ const jsonParser = bodyParser.json();
 
 const {Post} = require('./models');
 
+
 router.get('/', (req, res) => {
 	Post
 		.find()
 		.exec()
 		.then(posts => {
-			console.log(posts)
-			res.json(posts);
+			res.json({
+				posts: posts.map(
+					(post) => post.formatPost())
+			});
 		})
 		.catch(
 			err => {

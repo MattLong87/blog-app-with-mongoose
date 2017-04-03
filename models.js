@@ -7,7 +7,22 @@ const postSchema = mongoose.Schema({
 		lastName: {type: String, required: true}
 	},
 	content: {type: String, required: true}
-})
+});
+
+postSchema.virtual('fullName').get(function(){
+	return `${this.author.firstName} ${this.author.lastName}`;
+});
+
+postSchema.methods.formatPost = function(){
+	return {
+		title: this.title,
+		content: this.content,
+		author: this.fullName,
+		//need to add created field somehow
+	}
+}
+
+
 
 const Post = mongoose.model('Post', postSchema);
 
