@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const validator = require('./validatePost');
+//const validator = require('./validatepost');
 
 //for parsing JSON
 const bodyParser = require('body-parser');
@@ -9,6 +9,7 @@ const jsonParser = bodyParser.json();
 
 const {Post} = require('./models');
 
+router.use(jsonParser);
 //router.use(validator);
 
 //GET /posts sends back all posts in the database
@@ -49,20 +50,20 @@ router.get('/:id', (req, res) => {
 router.post('/', jsonParser, (req, res) => {
 	//validating all required fields are present and sending a 400 error if any missing
 	//should probably also validate author firstname and lastname
-	const requiredFields = ["title", "content", "author"];
-	let missingFields = [];
-	for (var i = 0; i < requiredFields.length; i++){
-		if (!(requiredFields[i] in req.body)){
-			missingFields.push(requiredFields[i]);
-		}
-	}
-	if(missingFields.length > 0){
-		errorMessage = "";
-		missingFields.forEach(field => {
-			errorMessage += field + " is required. ";
-		})
-		res.status(400).json({error: errorMessage});
-	}
+	// const requiredFields = ["title", "content", "author"];
+	// let missingFields = [];
+	// for (var i = 0; i < requiredFields.length; i++){
+	// 	if (!(requiredFields[i] in req.body)){
+	// 		missingFields.push(requiredFields[i]);
+	// 	}
+	// }
+	// if(missingFields.length > 0){
+	// 	errorMessage = "";
+	// 	missingFields.forEach(field => {
+	// 		errorMessage += field + " is required. ";
+	// 	})
+	// 	res.status(400).json({error: errorMessage});
+	// }
 	//if all fields were present, create post
 	Post.create({
 		title: req.body.title,
@@ -73,7 +74,7 @@ router.post('/', jsonParser, (req, res) => {
 	.then(post => res.status(201).json(post.formatPost()))
 	.catch(err => {
 		console.error(err);
-		res.status(500).json({message: 'Internal server error'});
+		res.status(500).json({message: err.errors});
 	});
 });
 
@@ -86,13 +87,6 @@ router.put('/:id', jsonParser, (req, res) => {
 	for (var field in req.body){
 		if (field != "id"){
 			toUpdate[field] = req.body[field];
-			//below doesn't work:
-			// Post.findByIdAndUpdate(req.params.id, {$set: {field: req.body[field]}}, {new: true})
-			// .exec()
-			// .then(post => {
-			// 	console.log(post);
-			// 	res.json(post);
-			// })
 		}
 	}
 	Post.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
