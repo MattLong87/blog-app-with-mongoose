@@ -6,7 +6,8 @@ const postSchema = mongoose.Schema({
 		firstName: {type: String, required: true},
 		lastName: {type: String, required: true}
 	},
-	content: {type: String, required: true}
+	content: {type: String, required: true},
+	created: {type: String}
 });
 
 postSchema.virtual('fullName').get(function(){
@@ -19,12 +20,10 @@ postSchema.methods.formatPost = function(){
 		content: this.content,
 		author: this.fullName,
 		//putting id here so we can have one to use for requests
-		id: this.id
-		//need to add created field somehow
+		id: this.id,
+		created: this.created
 	}
 }
-
-
 
 const Post = mongoose.model('Post', postSchema);
 

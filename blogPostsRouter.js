@@ -67,7 +67,8 @@ router.post('/', jsonParser, (req, res) => {
 	Post.create({
 		title: req.body.title,
 		content: req.body.content,
-		author: req.body.author
+		author: req.body.author,
+		created: Date.now().toString()
 	})
 	.then(post => res.status(201).json(post.formatPost()))
 	.catch(err => {
